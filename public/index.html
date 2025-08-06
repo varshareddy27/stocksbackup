@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SMART STOCK</title>
+  <link rel="stylesheet" href="styles.css" /> 
+</head>
+<body>
+
+  <!-- ✅ Marquee -->
+  <div id="marquee">
+    <marquee behavior="scroll" direction="left">
+      📈 Welcome to SMARTSTOCK – Where Markets Meet Simplicity!
+      💹 Add, View & Track Your Stocks Like a Pro!💸
+      📊 Live Market Mood Index Now Integrated!
+      💼 Invest Smart. Stay Ahead. Monitor Everything.
+      🔔 Stay Alert. Stay Informed. Stay Bullish.
+      📈 Discover Trends, Track Trades & Own the Market.
+    </marquee>
+  </div>
+
+  <!-- ✅ Dark Mode Toggle -->
+  <div style="display: flex; justify-content: flex-end; padding: 12px 20px;">
+    <label style="font-weight: bold; font-size: 16px; color: inherit;">
+      <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()" />
+      🌙 Dark Mode
+    </label>
+  </div>
+
+  <!-- ✅ Title -->
+  <h1>📋 SMART STOCK</h1>
+
+  <!-- ✅ Market Mood Summary -->
+  <div class="market-summary" onclick="window.location.href='mmi.html'">
+    <strong>📈 Market Mood: GREED ZONE</strong><br/><br/>
+    IN ... ZONE →
+    <span>MON</span>
+    <span>TUE</span>
+    <span>WED</span>
+    <span>THU</span>
+    <span>FRI</span>
+    <span class="today">TODAY</span>
+  </div>
+
+  <!-- ✅ Main Form Section -->
+  <div class="main-sections">
+    <div class="card fetch-add-card">
+      <h2>📊 Add New Stock</h2>
+      <form id="stock-form">
+        <input placeholder="User ID" id="user_id" required />
+        <input placeholder="Username" id="username" required />
+        <input placeholder="Stock Symbol" id="stock_symbol" required />
+        <input placeholder="Company Name" id="stock_company_name" required />
+        <select id="transaction_type" required>
+          <option value="">Select Type</option>
+          <option value="BUY">BUY</option>
+          <option value="SELL">SELL</option>
+        </select>
+        <input type="number" placeholder="Quantity" id="quantity" required />
+        <input type="number" step="0.01" placeholder="Price" id="price" required />
+        <input type="date" id="transaction_date" required />
+        <input placeholder="Sector (Optional)" id="sector" />
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+          <button type="submit">Add Stock</button>
+          <button type="button" onclick="clearForm()">Clear</button>
+          <button type="button" onclick="generateRandom()">Random</button>
+        </div>
+        <button type="submit">Add Stock</button>
+      </form>
+    </div>
+
+    <!-- View Stocks -->
+    <div class="card fetch-only-card">
+      <h2>📁 View My Stocks</h2>
+      <p>Click below to view all your stock records in table format.</p>
+      <button class="view-btn" onclick="window.location.href='stocks.html'">🔍 Fetch Stock Data</button>
+    </div>
+  </div>
+
+  <!-- Analysis -->
+  <div class="card fetch-only-card">
+    <h2>📈 Stock Analysis</h2>
+    <p>Visualize your investments with interactive charts and insights.</p>
+    <button class="view-btn" onclick="window.location.href='analysis.html'">📊 Go to Analysis</button>
+  </div>
+<!--Buy stock-->
+  <div class="card fetch-only-card">
+    <h2>💰 Buy Stocks</h2>
+    <p>Explore our curated list of stocks ready for purchase.</p>
+    <button class="view-btn" onclick="window.location.href='buy.html'">💵 Buy Stocks</button    >
+    </div>
+      <!--Sell stock-->
+  <div class="card fetch-only-card">
+    <h2>💰 Sell Stocks</h2>
+    <p>Sell your existing stocks and manage your returns.</p>
+    <button class="view-btn" onclick="window.location.href='sell.html'">💵Go to sell</button    >
+    </div>
+  <!-- Guide -->
+  <div style="background: linear-gradient(to right, #c084fc, #a855f7); color: white; padding: 30px 20px; border-radius: 16px; max-width: 1000px; margin: 40px auto; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+    <h2 style="margin-bottom: 10px; font-size: 28px;">📘 New to Stocks?</h2>
+    <p style="font-size: 18px; margin-bottom: 20px;">
+      Explore our beginner's guide to understand how stock markets work, how to invest, and how to use this app efficiently.
+    </p>
+    <a href="guide.html" style="background: white; color: #a855f7; padding: 14px 30px; font-weight: bold; border-radius: 8px; text-decoration: none; font-size: 18px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">🚀 Read the Beginner's Guide</a>
+  </div>
+
+  <!-- ✅ Stock Submit Script -->
+  <script>
+    const API = 'http://localhost:3000/stocks';
+    document.getElementById('stock-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const stock = {
+        user_id: document.getElementById('user_id').value,
+        username: document.getElementById('username').value,
+        stock_symbol: document.getElementById('stock_symbol').value,
+        stock_company_name: document.getElementById('stock_company_name').value,
+        transaction_type: document.getElementById('transaction_type').value,
+        quantity: parseInt(document.getElementById('quantity').value),
+        price: parseFloat(document.getElementById('price').value),
+        transaction_date: document.getElementById('transaction_date').value,
+        sector: document.getElementById('sector').value
+      };
+      await fetch(API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(stock)
+      });
+      alert("Stock added successfully!");
+      document.getElementById('stock-form').reset();
+    });
+
+    function clearForm() {
+      document.getElementById('stock-form').reset();
+      const msg = document.getElementById('resultMessage');
+      if (msg) msg.textContent = '';
+    }
+  
+    function generateRandom() {
+      const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+      const randomFloat = (min, max, decimals = 2) =>
+        (Math.random() * (max - min) + min).toFixed(decimals);
+  
+      const sectors = ['Technology', 'Finance', 'Healthcare', 'Energy', 'Retail'];
+      const companies = [
+        { symbol: 'AAPL', name: 'Apple Inc.' },
+        { symbol: 'GOOGL', name: 'Alphabet Inc.' },
+        { symbol: 'TSLA', name: 'Tesla Inc.' },
+        { symbol: 'AMZN', name: 'Amazon.com Inc.' },
+        { symbol: 'MSFT', name: 'Microsoft Corp.' }
+      ];
+  
+      const company = companies[randomInt(0, companies.length - 1)];
+  
+      document.getElementById('user_id').value = randomInt(100, 999);
+      document.getElementById('username').value = 'User' + randomInt(1, 100);
+      document.getElementById('stock_symbol').value = company.symbol;
+      document.getElementById('stock_company_name').value = company.name;
+      document.getElementById('transaction_type').value = Math.random() < 0.5 ? 'BUY' : 'SELL';
+      document.getElementById('quantity').value = randomInt(10, 100);
+      document.getElementById('price').value = randomFloat(50, 1000);
+      document.getElementById('transaction_date').value = new Date().toISOString().slice(0, 10);
+      document.getElementById('sector').value = sectors[randomInt(0, sectors.length - 1)];
+    }
+
+
+  </script>
+
+  <!-- ✅ Dark Mode Script -->
+  <script>
+    function toggleDarkMode() {
+      const enabled = document.body.classList.toggle("dark-mode");
+      localStorage.setItem("dark-mode", enabled);
+    }
+
+    window.onload = function () {
+      if (localStorage.getItem("dark-mode") === "true") {
+        document.body.classList.add("dark-mode");
+        document.getElementById("darkModeToggle").checked = true;
+      }
+    };
+  </script>
+
+  <!-- ✅ SMART Assistant -->
+  <!-- Keep your assistant widget here (already correct in your existing file) -->
+   <!-- 🧠 SMART Assistant -->
+<div id="assistant-widget" style="position: fixed; bottom: 20px; right: 20px; width: 300px; font-family: sans-serif; z-index: 999;">
+  <div id="chat-header" style="background: #4f46e5; color: white; padding: 10px; border-radius: 10px 10px 0 0; cursor: pointer;">
+    💬 SMART Assistant
+  </div>
+
+  <!-- 💬 Chat Messages -->
+  <div id="chat-body" style="background: white; height: 300px; overflow-y: auto; border: 1px solid #ccc; border-top: none; display: none; flex-direction: column; padding: 10px; gap: 6px;"></div>
+
+  <!-- 🔘 Suggestions Scrollable -->
+  <div id="chat-suggestions" style="background: #f8f5ff; max-height: 140px; overflow-y: auto; display: none; flex-wrap: wrap; padding: 10px; gap: 5px; border: 1px solid #ccc; border-top: none;">
+  </div>
+
+  <!-- 📝 User Input -->
+  <div id="chat-input" style="background: #f9f9f9; display: none; border: 1px solid #ccc; border-top: none; padding: 10px; border-radius: 0 0 10px 10px;">
+    <input type="text" id="user-input" placeholder="Type your question here..."
+           style="width: 100%; padding: 10px; border: 1px solid #aaa; border-radius: 6px; font-size: 14px;" />
+    <button onclick="handleUserInput()" 
+            style="margin-top: 10px; width: 100%; padding: 10px; background: #4f46e5; color: white; border: none; border-radius: 6px; font-size: 14px; cursor: pointer;">
+      Send
+    </button>
+  </div>
+</div>
+
+<!-- 💬 Assistant Script -->
+<script>
+  const suggestions = [
+    { text: "📈 What is a stock?", key: "stock" },
+    { text: "💼 What is a portfolio?", key: "portfolio" },
+    { text: "😎 What is market mood?", key: "mood" },
+    { text: "➕ How to add a stock?", key: "add" },
+    { text: "📊 How to analyze stock?", key: "analyze" },
+    { text: "🧮 How to calculate profit?", key: "profit" },
+    { text: "❌ How to delete a stock?", key: "delete" },
+    { text: "📘 What is MMI?", key: "mmi" },
+    { text: "🌙 How to enable dark mode?", key: "dark" }
+  ];
+
+  const responses = {
+    stock: "📈 A stock represents ownership in a company. You own a piece of it!",
+    portfolio: "💼 A portfolio is your personal collection of stocks or investments.",
+    mood: "😎 Market mood shows investor sentiment — like fear, greed, etc.",
+    add: "➕ Fill out the 'Add Stock' form and submit to record a stock.",
+    analyze: "📊 Use the Analysis page to view charts and trends.",
+    profit: "🧮 Profit = (Sell Price - Buy Price) × Quantity. Simple math!",
+    delete: "❌ We currently don’t support delete. You can sell instead.",
+    mmi: "📘 MMI means Market Mood Index — it reflects market sentiment.",
+    dark: "🌙 Toggle the switch at the top-right to enable Dark Mode."
+  };
+
+  const chatBody = document.getElementById('chat-body');
+  const chatInput = document.getElementById('chat-input');
+  const suggestionBox = document.getElementById('chat-suggestions');
+  const userInput = document.getElementById('user-input');
+  const header = document.getElementById('chat-header');
+
+  // Add Suggestions
+  suggestions.forEach(s => {
+    const btn = document.createElement('button');
+    btn.innerText = s.text;
+    btn.style.padding = '8px 10px';
+    btn.style.border = '1px solid #ddd';
+    btn.style.borderRadius = '8px';
+    btn.style.background = '#e9d5ff';
+    btn.style.cursor = 'pointer';
+    btn.style.fontSize = '13px';
+    btn.style.color = '#4b0082';
+    btn.style.marginBottom = '6px';
+    btn.onclick = () => handleQuestion(s.key, s.text);
+    suggestionBox.appendChild(btn);
+  });
+
+  // Handle Suggestion Click
+  function handleQuestion(key, text) {
+    appendMessage('user', text);
+    setTimeout(() => {
+      appendMessage('bot', responses[key] || "🤖 Sorry, I don’t have info on that yet.");
+    }, 500);
+  }
+
+  // User typed input
+  function handleUserInput() {
+    const originalText = userInput.value.trim();
+    const text = originalText.toLowerCase();
+    if (!text) return;
+  
+    appendMessage('user', originalText); // Show what user typed
+    userInput.value = '';
+  
+    // Try to find a matching keyword from the response keys
+    let foundKey = null;
+    for (let key in responses) {
+      if (text.includes(key)) {
+        foundKey = key;
+        break;
+      }
+    }
+  
+    setTimeout(() => {
+      if (foundKey) {
+        appendMessage('bot', responses[foundKey]);
+      } else {
+        appendMessage('bot', "🤖 Sorry, I don’t have info on that yet. Try using a suggestion below.");
+      }
+    }, 500);
+  }
+  
+
+  // Append to Chat
+  function appendMessage(sender, text) {
+    const msg = document.createElement('div');
+    msg.innerText = text;
+    msg.style.margin = '5px 0';
+    msg.style.padding = '10px';
+    msg.style.borderRadius = '12px';
+    msg.style.maxWidth = '80%';
+    msg.style.wordBreak = 'break-word';
+    msg.style.fontSize = '14px';
+    msg.style.background = sender === 'user' ? '#c7d2fe' : '#e5e7eb';
+    msg.style.color = '#111827';
+    msg.style.alignSelf = sender === 'user' ? 'flex-end' : 'flex-start';
+    chatBody.appendChild(msg);
+    chatBody.scrollTop = chatBody.scrollHeight;
+  }
+
+  // Toggle visibility
+  header.addEventListener('click', () => {
+    const open = chatBody.style.display === 'flex';
+    chatBody.style.display = open ? 'none' : 'flex';
+    suggestionBox.style.display = open ? 'none' : 'flex';
+    chatInput.style.display = open ? 'none' : 'block';
+  });
+</script>
+
+</body>
+</html>
+

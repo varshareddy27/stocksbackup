@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SMARTSTOCKS Analysis</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f4ff;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav {
+      background-color: #7f1ea8;
+      padding: 15px;
+      display: flex;
+      justify-content: space-around;
+      color: white;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 8px 15px;
+      border-radius: 5px;
+      transition: background 0.3s;
+    }
+
+    nav a:hover {
+      background-color: #7B5EFF;
+    }
+
+    h1 {
+      text-align: center;
+      color: #4B0082;
+      margin-top: 20px;
+    }
+
+    .chart-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      padding: 30px;
+    }
+
+    .chart-box {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 400px;
+      height: 400px;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="index.html#stock-form">Add Stock</a>
+    <a href="stocks.html">Fetch Data</a>
+    <a href="analysis.html">Analysis</a>
+    <a href="faq.html">FAQ</a>
+  </nav>
+
+  <h1>📊 SMARTSTOCKS Live Analysis</h1>
+
+  <div class="chart-container">
+    <div class="chart-box">
+      <canvas id="sectorChart"></canvas>
+    </div>
+    <div class="chart-box">
+      <canvas id="transactionTypeChart"></canvas>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:3000/api/stocks';
+
+    fetch(API_URL)
+      .then(res => res.json())
+      .then(data => {
+        // Sector Distribution
+        const sectorCount = {};
+        const transactionTypeCount = { BUY: 0, SELL: 0 };
+
+        data.forEach(stock => {
+          const sector = stock.sector || 'Unknown';
+          sectorCount[sector] = (sectorCount[sector] || 0) + 1;
+
+          const type = stock.transaction_type.toUpperCase();
+          if (transactionTypeCount[type] !== undefined) {
+            transactionTypeCount[type]++;
+          }
+        });
+
+        const sectorLabels = Object.keys(sectorCount);
+        const sectorValues = Object.values(sectorCount);
+
+        const typeLabels = Object.keys(transactionTypeCount);
+        const typeValues = Object.values(transactionTypeCount);
+
+        // Sector Chart
+        new Chart(document.getElementById('sectorChart'), {
+          type: 'pie',
+          data: {
+            labels: sectorLabels,
+            datasets: [{
+              data: sectorValues,
+              backgroundColor: ['#9C27B0', '#7B1FA2', '#6A1B9A', '#4A148C', '#AB47BC', '#CE93D8']
+            }]
+          },
+          options: {
+            plugins: {
+              title: {
+                display: true,
+                text: 'Stocks by Sector'
+              }
+            }
+          }
+        });
+
+        // Buy vs Sell Chart
+        new Chart(document.getElementById('transactionTypeChart'), {
+          type: 'doughnut',
+          data: {
+            labels: typeLabels,
+            datasets: [{
+              data: typeValues,
+              backgroundColor: ['#8E24AA', '#BA68C8']
+            }]
+          },
+          options: {
+            plugins: {
+              title: {
+                display: true,
+                text: 'Transaction Type Distribution'
+              }
+            }
+          }
+        });
+
+      })
+      .catch(err => {
+        console.error("Error loading data:", err);
+        alert("Failed to load chart data. Make sure the backend is running.");
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+/* === GLOBAL STYLES === */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f3e8ff;
+  background-image: url('https://www.transparenttextures.com/patterns/clean-gray-paper.png');
+  color: #333;
+}
+
+h1 {
+  text-align: center;
+  padding: 20px;
+  color: #4B0082;
+  font-size: 32px;
+}
+
+#marquee {
+  background-color: #b366ff;
+  padding: 10px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* === CARDS === */
+.card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  margin: 20px auto;
+  width: 95%;
+  max-width: 1200px;
+}
+
+/* === FORM INPUTS === */
+input, select, button {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+button {
+  background-color: #7a1fa2;
+  color: white;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #7a1fa2;
+}
+
+.view-btn {
+  background-color: #7a1fa2;
+}
+
+.view-btn:hover {
+  background-color: #7a1fa2;
+}
+
+/* === LAYOUT === */
+.main-sections {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* === MARKET MOOD BAR ON HOMEPAGE === */
+.market-summary {
+  background: linear-gradient(to right, #c084fc, #a855f7);
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  margin: 20px auto;
+  width: 95%;
+  max-width: 1200px;
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  cursor: pointer;
+}
+
+.market-summary span {
+  margin: 0 8px;
+  background: #fff;
+  padding: 5px 10px;
+  border-radius: 10px;
+  color: #a855f7;
+  font-weight: bold;
+}
+
+.market-summary .today {
+  background: #ff5733;
+  color: white;
+}
+
+/* === TABLE STYLING === */
+.table-container {
+  padding: 20px;
+  max-width: 95%;
+  margin: auto;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+}
+
+th {
+  background-color: #a855f7;
+  color: white;
+}
+
+tr:nth-child(even) {
+  background-color: #f3e8ff;
+}
+
+/* === MMI BAR GRAPH === */
+.mmi-bar-graph {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  height: 320px;
+  max-width: 95%;
+  margin: 50px auto;
+  padding: 30px;
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.bar {
+  width: 60px;
+  background-color: #a855f7;
+  color: white;
+  text-align: center;
+  border-radius: 10px 10px 0 0;
+  padding-top: 10px;
+  font-weight: bold;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.bar span {
+  display: block;
+  font-size: 24px;
+  margin-top: 10px;
+}
+
+.bar:hover {
+  background-color: #7e22ce;
+  transform: scaleY(1.1);
+}
+
+.bar.today {
+  background-color: #ff5722;
+}
+
+/* === TEXT BELOW GRAPH === */
+.mmi-label {
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  color: #a64dff;
+  margin-top: 20px;
+}
+
+/* === BUTTON BELOW GRAPH === */
+.mmi-label + button {
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+}

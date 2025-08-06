@@ -1,0 +1,350 @@
+<!---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Market Mood Index</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      margin: 0;
+      background-color: #f3e8ff;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('https://www.transparenttextures.com/patterns/clean-gray-paper.png');
+    }
+
+    .mmi-page-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .mmi-title {
+      font-size: 36px;
+      color: #6a0dad;
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .mmi-label {
+      font-size: 22px;
+      font-weight: bold;
+      color: #a64dff;
+      margin-top: 30px;
+    }
+
+    .mmi-bar-graph {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      height: 300px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 30px;
+      margin-top: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .bar {
+      width: 60px;
+      background-color: #a855f7;
+      color: white;
+      text-align: center;
+      border-radius: 10px 10px 0 0;
+      padding-top: 10px;
+      font-weight: bold;
+      position: relative;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .bar span {
+      display: block;
+      font-size: 24px;
+      margin-top: 10px;
+    }
+
+    .bar:hover {
+      background-color: #7e22ce;
+      transform: scaleY(1.1);
+    }
+
+    .bar.selected {
+      background-color: #ff5722;
+      border: 3px solid #222;
+    }
+
+    .bar.weekend {
+      width: 100%;
+      height: 100%;
+      background-color: #ccc;
+      color: #444;
+      font-size: 1.5rem;
+      text-align: center;
+      padding-top: 70px;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="mmi-page-container">
+    <h1 class="mmi-title">📊 Weekly Market Mood Index</h1>
+
+    <div class="mmi-label">
+      <strong>Select a day to view mood</strong>
+    </div>
+
+    <div id="mmi-graph" class="mmi-bar-graph">
+      
+    </div>
+  </div>
+
+  <script>
+    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri"];
+    const moods = [
+      { label: "Extreme Fear", height: 30, emoji: "😨" },
+      { label: "Fear", height: 45, emoji: "😟" },
+      { label: "Neutral", height: 60, emoji: "😐" },
+      { label: "Greed", height: 75, emoji: "😊" },
+      { label: "Extreme Greed", height: 90, emoji: "😎" }
+    ];
+
+    const todayIndex = new Date().getDay();
+    const graph = document.getElementById("mmi-graph");
+    const moodLabel = document.querySelector(".mmi-label strong");
+
+    function showMood(dayIndex) {
+      const mood = moods[dayIndex - 1];
+      if (!mood) return;
+
+      moodLabel.innerText = `${mood.label} Zone (${days[dayIndex]})`;
+
+      document.querySelectorAll('.bar').forEach(bar => bar.classList.remove('selected'));
+      const bar = document.querySelector(`.bar[data-day="${dayIndex}"]`);
+      if (bar) bar.classList.add('selected');
+    }
+
+    if (todayIndex === 0 || todayIndex === 6) {
+      graph.innerHTML = `<div class="bar weekend">Weekend</div>`;
+      moodLabel.innerText = "Market Closed (Weekend)";
+    } else {
+      for (let i = 1; i <= 5; i++) {
+        const mood = moods[i - 1];
+        const day = days[i];
+
+        const bar = document.createElement("div");
+        bar.className = "bar";
+        bar.style.height = `${mood.height}%`;
+        bar.setAttribute("data-day", i);
+        bar.innerHTML = `${day}<br><span>${mood.emoji}</span>`;
+
+        if (todayIndex === i) {
+          bar.classList.add("selected");
+          moodLabel.innerText = `${mood.label} Zone (Today - ${day})`;
+        }
+
+        bar.addEventListener('click', () => showMood(i));
+        graph.appendChild(bar);
+      }
+    }
+  </script>
+
+</body>
+</html>
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Market Mood Index</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f3e8ff;
+      background-image: url('https://www.transparenttextures.com/patterns/clean-gray-paper.png');
+      color: #333;
+    }
+
+    .mmi-page-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .mmi-title {
+      font-size: 36px;
+      color: #6a0dad;
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .mmi-label {
+      font-size: 22px;
+      font-weight: bold;
+      color: #a64dff;
+      margin-top: 30px;
+    }
+
+    .mmi-bar-graph {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+      height: 300px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 30px;
+      margin-top: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .bar {
+      width: 60px;
+      background-color: #a855f7;
+      color: white;
+      text-align: center;
+      border-radius: 10px 10px 0 0;
+      padding-top: 10px;
+      font-weight: bold;
+      position: relative;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .bar span {
+      display: block;
+      font-size: 24px;
+      margin-top: 10px;
+    }
+
+    .bar:hover {
+      background-color: #7e22ce;
+      transform: scaleY(1.1);
+    }
+
+    .bar.selected {
+      background-color: #ff5722;
+      border: 3px solid #222;
+    }
+
+    @keyframes burst {
+      0% {
+        opacity: 0;
+        transform: translate(0, 0) scale(0.5);
+      }
+      30% {
+        opacity: 1;
+        transform: translate(var(--x), var(--y)) scale(1.3);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(var(--x), var(--y)) scale(0.8);
+      }
+    }
+    
+  </style>
+</head>
+<body>
+
+  <div class="mmi-page-container">
+    <h1 class="mmi-title">📊 Weekly Market Mood Index</h1>
+
+    <div class="mmi-label">
+      <strong>Select a day to view mood</strong>
+    </div>
+
+    <div id="mmi-graph" class="mmi-bar-graph">
+      <!-- Bars inserted by JS -->
+    </div>
+
+  </div>
+
+  <script>
+    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const moods = [
+      { label: "Extreme Fear", height: 30, emoji: "😨" },
+      { label: "Fear", height: 45, emoji: "😟" },
+      { label: "Neutral", height: 60, emoji: "😐" },
+      { label: "Greed", height: 75, emoji: "😊" },
+      { label: "Extreme Greed", height: 90, emoji: "😎" }
+    ];
+
+    const todayIndex = new Date().getDay(); // 0 = Sun, 6 = Sat
+    const graph = document.getElementById("mmi-graph");
+    const moodLabel = document.querySelector(".mmi-label strong");
+
+    function showMood(dayIndex) {
+      const mood = moods[dayIndex - 1];
+      if (!mood) return;
+    
+      moodLabel.innerText = `${mood.label} Zone (${days[dayIndex]})`;
+    
+      document.querySelectorAll('.bar').forEach(bar => bar.classList.remove('selected'));
+      const bar = document.querySelector(`.bar[data-day="${dayIndex}"]`);
+      if (bar) bar.classList.add('selected');
+    
+      // 🎉 Pop large emojis from random spots on screen
+      for (let i = 0; i < 30; i++) {
+        const emoji = document.createElement('div');
+        emoji.innerText = mood.emoji;
+        emoji.style.position = 'fixed';
+        emoji.style.zIndex = 9999;
+        emoji.style.pointerEvents = 'none';
+    
+        // Random start position
+        const startX = Math.random() * window.innerWidth;
+        const startY = Math.random() * window.innerHeight;
+        emoji.style.left = `${startX}px`;
+        emoji.style.top = `${startY}px`;
+    
+        // Random size between 50–80px
+        const size = 50 + Math.random() * 30;
+        emoji.style.fontSize = `${size}px`;
+    
+        // Animate
+        emoji.style.animation = `burst 1.5s ease-out forwards`;
+    
+        // Random direction
+        const angle = Math.random() * 2 * Math.PI;
+        const distance = 80 + Math.random() * 150;
+        const dx = Math.cos(angle) * distance;
+        const dy = Math.sin(angle) * distance;
+    
+        emoji.style.setProperty('--x', `${dx}px`);
+        emoji.style.setProperty('--y', `${dy}px`);
+    
+        document.body.appendChild(emoji);
+        setTimeout(() => emoji.remove(), 1500);
+      }
+    }
+    
+    
+
+    // Show only Mon–Fri bars
+    for (let i = 1; i <= 5; i++) {
+      const mood = moods[i - 1];
+      const day = days[i];
+
+      const bar = document.createElement("div");
+      bar.className = "bar";
+      bar.style.height = `${mood.height}%`;
+      bar.setAttribute("data-day", i);
+      bar.innerHTML = `${day}<br><span>${mood.emoji}</span>`;
+
+      if (todayIndex === i) {
+        bar.classList.add("selected");
+        moodLabel.innerText = `${mood.label} Zone (Today - ${day})`;
+      }
+
+      bar.addEventListener('click', () => showMood(i));
+      graph.appendChild(bar);
+    }
+  </script>
+
+</body>
+</html>

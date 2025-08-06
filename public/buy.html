@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Buy Stock</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      color: #000;
+      margin: 0;
+      padding: 20px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .dark-mode {
+      background-color: #121212;
+      color: #f0f0f0;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+      border-radius: 12px;
+      background-color: #ffffff;
+      box-shadow: 0 0 10px rgba(0, 128, 255, 0.2);
+    }
+
+    .dark-mode .container {
+      background-color: #1e1e1e;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    }
+
+    h2 {
+      text-align: center;
+      color: #0077cc;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0 4px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .buttons {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    button {
+      padding: 10px 16px;
+      margin: 0 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .submit-btn {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .clear-btn {
+      background-color: #ffc107;
+      color: black;
+    }
+
+    .back-btn {
+      background-color: #007bff;
+      color: white;
+    }
+
+    .dark-mode button.submit-btn {
+      background-color: #3fcf5e;
+    }
+
+    .dark-mode button.clear-btn {
+      background-color: #ffdb70;
+    }
+
+    .dark-mode button.back-btn {
+      background-color: #3399ff;
+    }
+
+    .toggle-mode {
+      text-align: right;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+
+    .toggle-mode button {
+      background-color: #444;
+      color: #fff;
+      font-size: 12px;
+      padding: 6px 10px;
+    }
+
+    .dark-mode .toggle-mode button {
+      background-color: #ddd;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <div class="toggle-mode">
+    <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+  </div>
+
+  <div class="container">
+    <h2>Buy Stock</h2>
+    <form id="buyForm">
+      <label for="user_id">User ID</label>
+      <input type="number" id="user_id" name="user_id" required>
+
+      <label for="stock_symbol">Stock Symbol</label>
+      <input type="text" id="stock_symbol" name="stock_symbol" required>
+
+      <label for="quantity">Quantity</label>
+      <input type="number" id="quantity" name="quantity" required>
+
+      <div class="buttons">
+        <button type="submit" class="submit-btn">Submit</button>
+        <button type="button" class="clear-btn" onclick="clearForm()">Clear</button>
+        <button type="button" class="back-btn" onclick="goBack()">Back</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+    }
+
+    function clearForm() {
+      document.getElementById('buyForm').reset();
+    }
+
+    function goBack() {
+      window.location.href = 'index.html'; // go back to dashboard
+    }
+
+    // 🔁 Replaced your original fetch logic with PUT logic
+    document.getElementById('buyForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const user_id = document.getElementById('user_id').value;
+      const stock_symbol = document.getElementById('stock_symbol').value;
+      const quantity = document.getElementById('quantity').value;
+
+      if (!user_id || !stock_symbol || !quantity) {
+        return showPopup("All fields are required!");
+      }
+
+      const parsedUserId = parseInt(user_id);
+      const parsedQuantity = parseInt(quantity);
+
+      if (isNaN(parsedUserId) || isNaN(parsedQuantity) || parsedQuantity <= 0) {
+        return showPopup("User ID and Quantity must be valid positive numbers.");
+      }
+
+      try {
+        const response = await fetch('http://localhost:3000/api/stocks/buy', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id: parsedUserId,
+            stock_symbol: stock_symbol.toUpperCase(),
+            quantity: parsedQuantity
+          })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          showPopup(result.message || 'Buy successful!');
+          clearForm();
+        } else {
+          showPopup(result.error || 'Buy failed.');
+        }
+      } catch (err) {
+        console.error('BUY failed:', err);
+        showPopup('Server error during buy.');
+      }
+    });
+
+    function showPopup(message) {
+      const popup = document.createElement('div');
+      popup.innerText = message;
+      popup.style.position = 'fixed';
+      popup.style.bottom = '20px';
+      popup.style.left = '50%';
+      popup.style.transform = 'translateX(-50%)';
+      popup.style.background = '#007bff';
+      popup.style.color = 'white';
+      popup.style.padding = '10px 20px';
+      popup.style.borderRadius = '8px';
+      popup.style.zIndex = '1000';
+      document.body.appendChild(popup);
+      setTimeout(() => document.body.removeChild(popup), 2000);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All Stocks</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <h1>📊 My Stocks</h1>
+  <div class="table-container">
+    <table id="stocks-table">
+      <thead>
+        <tr>
+          <th>User ID</th>
+          <th>Username</th>
+          <th>Stock Symbol</th>
+          <th>Company</th>
+          <th>Type</th>
+          <th>Qty</th>
+          <th>Price</th>
+          <th>Date</th>
+          <th>Sector</th>
+        </tr>
+      </thead>
+      <tbody id="stocks-body"></tbody>
+    </table>
+  </div>
+
+  <script>
+    fetch('http://localhost:3000/stocks')
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.getElementById('stocks-body');
+        data.forEach(s => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${s.user_id}</td>
+            <td>${s.username}</td>
+            <td>${s.stock_symbol}</td>
+            <td>${s.stock_company_name}</td>
+            <td>${s.transaction_type}</td>
+            <td>${s.quantity}</td>
+            <td>${s.price}</td>
+            <td>${s.transaction_date}</td>
+            <td>${s.sector || '-'}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      });
+  </script>
+
+  <div style="margin-top: 20px; font-weight: bold; font-size: 18px; text-align: center;">
+    💰 Total Invested Value: ₹<span id="total-value">0</span>
+  </div>
+  
+
+</body>
+</html>
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All Stocks</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      transition: background-color 0.5s ease, color 0.5s ease;
+    }
+    .dark-mode {
+      background-color: #1c1c1c;
+      color: #f0f0f0;
+    }
+    .dark-mode table, .dark-mode th, .dark-mode td {
+      background-color: #2a2a2a;
+      color: #f0f0f0;
+    }
+    .dark-mode .table-container {
+      background-color: #2a2a2a;
+    }
+    .dark-mode input,
+    .dark-mode select,
+    .dark-mode button {
+      background-color: #333;
+      color: white;
+      border-color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🌙 Dark Mode Toggle -->
+  <div style="text-align: right; padding: 10px 20px;">
+    <label style="font-weight: bold;" title="Toggle light/dark mode">
+      <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()" />
+      🌙 Dark Mode
+    </label>
+  </div>
+
+  <h1>📊 My Stocks</h1>
+
+  <div class="table-container">
+    <table id="stocks-table">
+      <thead>
+        <tr>
+          <th>User ID</th>
+          <th>Username</th>
+          <th>Stock Symbol</th>
+          <th>Company</th>
+          <th>Type</th>
+          <th>Qty</th>
+          <th>Price</th>
+          <th>Date</th>
+          <th>Sector</th>
+        </tr>
+      </thead>
+      <tbody id="stocks-body"></tbody>
+    </table>
+  </div>
+
+  <script>
+    // ✅ Fetch and display stock data
+    fetch('http://localhost:3000/api/stocks')
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.getElementById('stocks-body');
+        let totalValue = 0;
+
+        data.forEach(s => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${s.user_id}</td>
+            <td>${s.username}</td>
+            <td>${s.stock_symbol}</td>
+            <td>${s.stock_company_name}</td>
+            <td>${s.transaction_type}</td>
+            <td>${s.quantity}</td>
+            <td>${s.price}</td>
+            <td>${s.transaction_date}</td>
+            <td>${s.sector || '-'}</td>
+          `;
+          tbody.appendChild(row);
+          totalValue += s.price * s.quantity;
+        });
+
+      });
+
+    // ✅ Dark Mode Toggle
+    function toggleDarkMode() {
+      const dark = document.body.classList.toggle("dark-mode");
+      localStorage.setItem("dark-mode", dark);
+    }
+
+    window.onload = function () {
+      if (localStorage.getItem("dark-mode") === "true") {
+        document.body.classList.add("dark-mode");
+        document.getElementById("darkModeToggle").checked = true;
+      }
+    };
+  </script>
+
+</body>
+</html>
+
+
